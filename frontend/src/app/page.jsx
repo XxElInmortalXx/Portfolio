@@ -48,7 +48,7 @@ export default function Home() {
           <Image className="block object-cover w-60 h-60 md:w-64 md:h-64 rounded-full" src={imageHero} priority width={200} height={200} alt="image header andres eduardo" />
           <article className="text-center md:text-left md:max-w-xl">
             <h2 className="text-4xl font-bold mt-4 md:mt-0 leading-none">Hi, I'm Andres Eduardo,<span className="block mt-2">Full Stack Developer</span></h2>
-            <p className="text-lg mt-4">Full Stack Developer with a focus on creating attractive and functional digital experiences, integrating technical knowledge and creativity to build high-performance web platforms and intuitive applications.</p>
+            <p className="text-lg mt-4">Full Stack Developer with a focus on creating attractive and functional digital experiences, integrating technical knowledge and creativity to build high-performance web platforms and intuitive applications</p>
             <div className="flex flex-col gap-2 md:flex-row">
               <Link
                 href='https://drive.google.com/file/d/1MkkDRsOybO9bMbIC0hHP1DGyY4PoIcek/view?usp=drive_link'

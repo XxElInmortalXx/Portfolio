@@ -22,9 +22,7 @@ const createWork = async (req, res) => {
       throw new Error("Image is required");
     }
     // crear URL de la imagen
-    const image_url = `${process.env.BACKEND_URL}${
-      process.env.PORT || 4000
-    }/images/${req.file.filename}`;
+    const image_url = `${process.env.BACKEND_URL}/images/${req.file.filename}`;
     // traer user_id
     const user = await Users.findOne({
       where: { user_id: req.headers.authorization.id },
@@ -62,9 +60,7 @@ const updateWork = async (req, res) => {
     );
     fs.unlinkSync(imageToDeletePath);
     // crear URL de la imagen
-    const image_url_new = `${process.env.BACKEND_URL}${
-      process.env.PORT || 4000
-    }/images/${req.file.filename}`;
+    const image_url_new = `${process.env.BACKEND_URL}/images/${req.file.filename}`;
     // traer user_id
     const user = await Users.findOne({
       where: { user_id: req.headers.authorization.id },

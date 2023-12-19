@@ -4,7 +4,7 @@ import { syncTables } from '../utils/syncTables.js'
 const db = async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({alter: true});
+    await sequelize.sync({force: true});
     // sync database tables
     syncTables()
     // message success
