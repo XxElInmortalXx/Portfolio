@@ -10,6 +10,9 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
   define: {
     freezeTableName: true,
   },
+  dialectOptions: {
+    connectTimeout: 60000
+  },
 });
 
 export { sequelize }
