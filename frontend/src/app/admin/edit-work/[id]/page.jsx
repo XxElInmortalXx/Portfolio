@@ -1,7 +1,73 @@
-import Link from 'next/link'
-import React from 'react'
+'use client'
 
-function EditWorkPage() {
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import { getWork, updateWork } from '../../../../api/works.api'
+import Alert from '@/components/Alert'
+import { authFunctions } from '@/ulits/auth'
+
+function EditWorkPage({ params }) {
+  const [formDataTwo, setFormDataTwo] = useState({
+    title: '',
+    subtitle: '',
+    content: ''
+  })
+  const [alert, setAlert] = useState({
+    msg: '',
+    error: true
+  })
+  const [loading, setLoading] = useState(false)
+
+  const handleChange = (e) => {
+    setFormDataTwo({
+      ...formDataTwo,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const fields = Object.fromEntries(new window.FormData(e.target))
+      const jwt = authFunctions.getJWT()
+      const response = await updateWork(params.id, fields, jwt)
+      if (response.error) {
+        setAlert({
+          msg: response.msg,
+          error: true
+        })
+      } else {
+        setAlert({
+          msg: response.msg,
+          error: false
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
+  }
+
+  const getOneWork = async () => {
+    setLoading(true)
+    try {
+      const response = await getWork(params.id)
+      setFormDataTwo({
+        title: response.work.title,
+        subtitle: response.work.subtitle,
+        content: response.work.content
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    getOneWork()
+  }, [])
+
   return (
     <section
       className='w-[90%] mx-auto container max-w-lg'
@@ -9,12 +75,13 @@ function EditWorkPage() {
       <h1 className='pt-8 text-4xl font-bold text-center'>Admin Page</h1>
       <p className='text-center mb-4'>Here you can edit your work</p>
       <Link className='inline-block my-2 max-w-lg mx-auto text-base text-white text-center py-2 px-4 rounded-md bg-blue-500 hover:bg-blue-400 active:bg-blue-600 font-medium' href={{ pathname: '/admin' }}>Back to Admin</Link>
-      <form className='max-w-lg mx-auto w-full bg-white rounded-md shadow-lg p-8'>
+      <form onSubmit={handleSubmit} className='max-w-lg mx-auto w-full bg-white rounded-md shadow-lg p-8'>
         <fieldset>
           <legend className='text-center py-4 text-xl text-gray-500'>Edit Work</legend>
           <label className='text-lg font-medium'>Image</label>
           <input
             type="file"
+            accept=".jpg, .jpeg, .png"
             name="image"
             className='w-full p-2 mb-2 border outline-none rounded-md shadow-md bg-white placeholder-gray-500'
           />
@@ -24,6 +91,8 @@ function EditWorkPage() {
             name="title"
             className='w-full p-2 mb-2 border outline-none rounded-md shadow-md bg-white placeholder-gray-500'
             placeholder='Title of post'
+            onChange={handleChange}
+            value={formDataTwo.title}
           />
           <label className='text-lg font-medium' htmlFor="subtitle">Subtitle</label>
           <input
@@ -31,6 +100,8 @@ function EditWorkPage() {
             name="subtitle"
             className='w-full p-2 mb-2 border outline-none rounded-md shadow-md bg-white placeholder-gray-500'
             placeholder='Subtitle of post'
+            onChange={handleChange}
+            value={formDataTwo.subtitle}
           />
           <label className='text-lg font-medium' htmlFor="content">Content</label>
           <textarea
@@ -38,6 +109,8 @@ function EditWorkPage() {
             name="content"
             className='w-full p-2 mb-2 border outline-none rounded-md shadow-md bg-white placeholder-gray-500'
             placeholder='Content of post'
+            onChange={handleChange}
+            value={formDataTwo.content}
           />
         </fieldset>
         <button
@@ -47,6 +120,8 @@ function EditWorkPage() {
           Edit Work
         </button>
       </form>
+      {loading && <p className="p-8 text-center font-medium">Loading...</p>}
+      {alert.msg !== '' && <Alert error={alert.error} msg={alert.msg} />}
     </section>
   )
 }
